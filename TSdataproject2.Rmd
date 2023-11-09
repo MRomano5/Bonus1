@@ -1,0 +1,128 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+Step 3: Create two visualizations of your data set that illustrate some hidden information or insight into the data set. Make sure that the visualizations are easy for your viewers to understand and follow best practices. Do this by Oct. 20, 2023 at the start of class. You will submit a compressed folder containing your Rmd file and data set to Canvas by the deadline.
+#Loading in the data
+```{r}
+getwd()
+#setwd("C:/Users/mirab/Desktop/CPSC292")
+getwd()
+tsdata <- read.csv("taylor_swift_spotify.csv")
+```
+
+```{r}
+head(tsdata)
+```
+
+#raw danceability data
+```{r}
+library(ggplot2)
+# Create a scatter plot
+ggplot(tsdata, aes(x = album, y = danceability)) +
+  geom_point() +  # Scatter plot
+  xlab("Album") + ylab("Danceability") +  # Labels for axes
+  theme_minimal()+  # Use a minimal theme 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+#updated danceability data (colorblind friendly)
+```{r}
+library(ggplot2)
+
+# Define a vector of albums to include
+included_albums <- c("Taylor Swift", "Fearless (Taylor's Version)", "Speak Now (Taylor's Version)", "Red (Taylor's Version)", "reputation", "Lover", "1989", "folklore", "evermore", "Midnights")
+
+# Filter the data to include only the specified albums
+tsdata_filtered <- tsdata[tsdata$album %in% included_albums, ]
+
+# Define colors for each album
+album_colors <- c(
+  "Taylor Swift" = "#44AA99",
+  "Fearless (Taylor's Version)" = "#DDCC77",
+  "Speak Now (Taylor's Version)" = "#332288",
+  "Red (Taylor's Version)" = "#882255",
+  "reputation" = "black",
+  "Lover" = "#CC6677",
+  "1989" = "#88CCEE",
+  "folklore" = "grey",
+  "evermore" = "#117733",
+  "Midnights" = "#AA4499")
+
+# Create a scatter plot with the filtered data and custom colors
+plot <- ggplot(tsdata_filtered, aes(x = album, y = danceability, color = album)) +
+  geom_point(size = 4) +  # Increase point size
+  scale_color_manual(values = album_colors) +  # Assign custom colors
+  xlab("Album") + ylab("Danceability")+ ggtitle("Danceability of Each Taylor Swift Album")+ # Labels for axes
+  theme_minimal() +  (theme(plot.title = element_text(hjust = 0.5))) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate and space out x-axis labels
+  theme(legend.position = "none")  # Remove the legend
+
+# Print the plot
+print(plot)
+
+```
+
+#boxplot
+```{r}
+# Load the ggplot2 library
+library(ggplot2)
+
+# Define a vector of albums to include
+included_albums <- c("Taylor Swift", "Fearless (Taylor's Version)", "Speak Now (Taylor's Version)", "Red (Taylor's Version)", "reputation", "Lover", "1989", "folklore", "evermore", "Midnights")
+
+# Filter the data to include only the specified albums
+tsdata_filtered <- tsdata[tsdata$album %in% included_albums, ]
+
+# Define colors for each album
+album_colors <- c(
+  "Taylor Swift" = "#44AA99",
+  "Fearless (Taylor's Version)" = "#DDCC77",
+  "Speak Now (Taylor's Version)" = "#332288",
+  "Red (Taylor's Version)" = "#882255",
+  "reputation" = "black",
+  "Lover" = "#CC6677",
+  "1989" = "#88CCEE",
+  "folklore" = "grey",
+  "evermore" = "#117733",
+  "Midnights" = "#AA4499")
+
+# Create a boxplot with the filtered data and custom colors
+plot <- ggplot(tsdata_filtered, aes(x = album, y = danceability, fill = album)) +
+  geom_boxplot() +  # Create a boxplot
+  scale_fill_manual(values = album_colors) +  # Assign custom colors
+  xlab("Album") + ylab("Danceability") + ggtitle("Danceability of Each Taylor Swift Album") +  # Labels for axes and title
+  theme_minimal() +  (theme(plot.title = element_text(hjust = 0.5))) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  # Rotate and space out x-axis labels
+  theme(legend.position = "none")  # Remove the legend
+
+# Print the plot
+print(plot)
+```
+
+
+
+
+
+```{r}
+library(ggplot2)
+
+# Define the album you want to analyze
+target_album <- "Lover"
+
+# Filter the data to include only the tracks from the target album
+album_data <- tsdata[tsdata$album == target_album, ]
+
+# Create a bar plot of danceability for each track (name)
+ggplot(album_data, aes(x = name, y = danceability)) +
+  geom_bar(stat = "identity", fill = "#CC6677", color = "black") +
+  xlab("Track Name") + ylab("Danceability") +
+  theme_minimal() + (theme(plot.title = element_text(hjust = 0.5)))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle(paste("Danceability of Tracks on", target_album)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1))
+```
